@@ -19,5 +19,16 @@
         export RUSTC_WRAPPER=sccache
         '';
       };
+      packages.${system} = {
+        hyprland-workspaces = pkgs.rustPlatform.buildRustPackage {
+        name = "hyprland-workspaces";
+        src = ./hyprland-workspaces;
+        cargoLock = {
+          lockFile = ./hyprland-workspaces/Cargo.lock;
+        };
+        nativeBuildInputs = [  ];
+        buildInputs = [  ];
+        };
+      };
     };
 }
