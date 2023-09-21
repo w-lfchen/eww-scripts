@@ -16,7 +16,7 @@
         ];
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
         shellHook = ''
-        RUSTC_WRAPPER=sccache
+        export RUSTC_WRAPPER=sccache
         '';
       };
     };
