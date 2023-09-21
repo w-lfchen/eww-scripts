@@ -9,6 +9,7 @@
     {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          rustfmt
           rustc
           cargo
           sccache
