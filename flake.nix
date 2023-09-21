@@ -9,10 +9,12 @@
     {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          rustc
           cargo
           sccache
           rust-analyzer
         ];
+        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
         shellHook = ''
         RUSTC_WRAPPER=sccache
         '';
