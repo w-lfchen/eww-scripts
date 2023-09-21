@@ -11,6 +11,7 @@
         buildInputs = with pkgs; [
           cargo
           sccache
+          rust-analyzer
         ];
         shellHook = ''
         RUSTC_WRAPPER=sccache
