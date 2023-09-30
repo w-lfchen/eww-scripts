@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Flake for my eww scripts";
 
   outputs = { self, nixpkgs }:
     let
@@ -17,18 +17,18 @@
         ];
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
         shellHook = ''
-        export RUSTC_WRAPPER=sccache
+          export RUSTC_WRAPPER=sccache
         '';
       };
       packages.${system} = {
         hyprland-workspaces = pkgs.rustPlatform.buildRustPackage {
-        name = "hyprland-workspaces";
-        src = ./hyprland-workspaces;
-        cargoLock = {
-          lockFile = ./hyprland-workspaces/Cargo.lock;
-        };
-        nativeBuildInputs = [  ];
-        buildInputs = [  ];
+          name = "hyprland-workspaces";
+          src = ./hyprland-workspaces;
+          cargoLock = {
+            lockFile = ./hyprland-workspaces/Cargo.lock;
+          };
+          nativeBuildInputs = [  ];
+          buildInputs = [  ];
         };
       };
     };
