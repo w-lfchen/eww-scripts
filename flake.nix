@@ -27,8 +27,17 @@
           cargoLock = {
             lockFile = ./hyprland-workspaces/Cargo.lock;
           };
-          nativeBuildInputs = [  ];
-          buildInputs = [  ];
+          nativeBuildInputs = [];
+          buildInputs = [];
+        };
+        hyprland-current-window-title = pkgs.rustPlatform.buildRustPackage {
+          name = "hyprland-current-window-title";
+          src = ./hyprland-current-window-title;
+          cargoLock = {
+            lockFile = ./hyprland-current-window-title/Cargo.lock;
+          };
+          nativeBuildInputs = [];
+          buildInputs = [];
         };
       };
     };
