@@ -8,6 +8,8 @@ fn main() -> Result<()> {
     let mut listener = EventListener::new();
     listener.add_active_window_change_handler(|_, _| print_window_title());
     listener.add_window_title_change_handler(|_, _| print_window_title());
+    listener.add_window_close_handler(|_, _| print_window_title());
+    listener.add_workspace_change_handler(|_, _| print_window_title());
     listener.start_listener()
 }
 
