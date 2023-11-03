@@ -9,7 +9,6 @@ fn main() -> Result<()> {
     match args.len() {
         1 => listen_single(),
         2 => {
-            // TODO: expect second argument to be the monitor in question, parse and handle accordingly
             if let Some(mon_id) = parse_monitor(&args[1]) {
                 listen_mon(mon_id)
             } else {
@@ -34,6 +33,7 @@ fn listen_single() -> Result<()> {
     listener.add_workspace_added_handler(|_, _| print_data_single());
     listener.add_workspace_destroy_handler(|_, _| print_data_single());
     listener.add_workspace_moved_handler(|_, _| print_data_single());
+    listener.add_active_monitor_change_handler(|_, _| print_data_single());
     listener.start_listener()
 }
 
@@ -45,23 +45,21 @@ fn print_data_single() {
         .expect("Couldn't get workspaces vector!")
         .into_iter()
         .collect();
-    workspaces.sort_by_key(|x| x.id);
+    workspaces.sort_by_key(|ws| ws.id);
     let mut string: String = "[".to_string();
-    for i in workspaces.into_iter().map(|x| {
+    for str in workspaces.iter().map(|ws| {
         format!(
-            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}}",
-            x.id,
-            x.name,
-            x.id,
-            x.id == active_id
+            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}},",
+            ws.id,
+            ws.name,
+            ws.id,
+            ws.id == active_id
         )
     }) {
-        string.push_str(i.as_str());
-        string.push(',');
+        string.push_str(&str);
     }
     string.pop(); // remove last comma
-    string.push(']');
-    println!("{string}");
+    println!("{string}]");
 }
 
 fn parse_monitor(input: &str) -> Option<i128> {
@@ -97,7 +95,7 @@ fn print_mon_data(id: i128) {
     let mut string: String = String::from("{\"active\":");
     string.push_str(
         if Monitor::get_active()
-            .expect("Couldn't access active monitor")
+            .expect("Couldn't access active monitor!")
             .id
             == id
         {
@@ -106,19 +104,17 @@ fn print_mon_data(id: i128) {
             "false,\"workspaces\":["
         },
     );
-    for i in workspaces.into_iter().map(|x| {
+    for str in workspaces.iter().map(|ws| {
         format!(
-            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}}",
-            x.id,
-            x.name,
-            x.id,
-            x.id == active_ws_id
+            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}},",
+            ws.id,
+            ws.name,
+            ws.id,
+            ws.id == active_ws_id
         )
     }) {
-        string.push_str(i.as_str());
-        string.push(',');
+        string.push_str(&str);
     }
     string.pop(); // remove last comma
-    string.push_str("]}");
-    println!("{string}");
+    println!("{string}]}}");
 }
