@@ -39,6 +39,15 @@
           nativeBuildInputs = [];
           buildInputs = [];
         };
+        eww-launch = pkgs.rustPlatform.buildRustPackage {
+          name = "eww-launch";
+          src = ./eww-launch;
+          cargoLock = {
+            lockFile = ./eww-launch/Cargo.lock;
+          };
+          nativeBuildInputs = [];
+          buildInputs = [];
+        };
       };
     };
 }
