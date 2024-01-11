@@ -43,7 +43,6 @@ fn print_data_single() {
         .id;
     let mut workspaces: Vec<_> = Workspaces::get()
         .expect("Couldn't get workspaces vector!")
-        .into_iter()
         .collect();
     workspaces.sort_by_key(|ws| ws.id);
     let mut string: String = "[".to_string();
@@ -88,7 +87,6 @@ fn print_mon_data(id: i128) {
         .expect("Recieved an invalid monitor id!");
     let mut workspaces: Vec<_> = Workspaces::get()
         .expect("Couldn't get workspaces vector!")
-        .into_iter()
         .filter(|ws| ws.monitor == mon_name)
         .collect();
     workspaces.sort_by_key(|ws| ws.id);
