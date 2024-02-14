@@ -5,3 +5,15 @@ edition = "2021"
 
 [dependencies]
 hyprland = "0.3.13"
+
+[[bin]]
+name = "eww-launch"
+path = "src/eww-launch.rs"
+
+[[bin]]
+name = "hyprland-current-window-title"
+path = "src/hyprland-current-window-title.rs"
+
+[[bin]]
+name = "hyprland-workspaces"
+path = "src/hyprland-workspaces.rs"
