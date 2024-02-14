@@ -1,12 +1,13 @@
 {
-  description = "Flake for my eww scripts";
+  description = "Some eww scripts";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-    in
-    {
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           rustfmt
@@ -21,34 +22,28 @@
           export RUSTC_WRAPPER=sccache
         '';
       };
-      packages.${system} = {
-        hyprland-workspaces = pkgs.rustPlatform.buildRustPackage {
-          name = "hyprland-workspaces";
-          src = ./hyprland-workspaces;
-          cargoLock = {
-            lockFile = ./hyprland-workspaces/Cargo.lock;
-          };
-          nativeBuildInputs = [];
-          buildInputs = [];
+      packages.${system} = let
+        targets = [
+          "eww-launch"
+          "hyprland-current-window-title"
+          "hyprland-workspaces"
+        ];
+        packages = builtins.foldl' (acc: t:
+          {
+            ${t} = pkgs.rustPlatform.buildRustPackage {
+              name = t;
+              src = ./.;
+              cargoBuildFlags = "--bin ${t}";
+              cargoLock.lockFile = ./Cargo.lock;
+            };
+          } // acc) { } targets;
+      in packages // rec {
+        all = pkgs.symlinkJoin {
+          name = "eww-scripts";
+          paths = builtins.attrValues packages;
         };
-        hyprland-current-window-title = pkgs.rustPlatform.buildRustPackage {
-          name = "hyprland-current-window-title";
-          src = ./hyprland-current-window-title;
-          cargoLock = {
-            lockFile = ./hyprland-current-window-title/Cargo.lock;
-          };
-          nativeBuildInputs = [];
-          buildInputs = [];
-        };
-        eww-launch = pkgs.rustPlatform.buildRustPackage {
-          name = "eww-launch";
-          src = ./eww-launch;
-          cargoLock = {
-            lockFile = ./eww-launch/Cargo.lock;
-          };
-          nativeBuildInputs = [];
-          buildInputs = [];
-        };
+        default = all;
       };
+      formatter.${system} = pkgs.nixfmt;
     };
 }
