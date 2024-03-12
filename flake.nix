@@ -31,18 +31,15 @@
             "hyprland-current-window-title"
             "hyprland-workspaces"
           ];
-          packages = builtins.foldl' (
-            acc: t:
-            {
-              ${t} = pkgs.rustPlatform.buildRustPackage {
-                name = t;
-                src = ./.;
-                cargoBuildFlags = "--bin ${t}";
-                cargoLock.lockFile = ./Cargo.lock;
-              };
+          packages = nixpkgs.lib.genAttrs targets (
+            name:
+            pkgs.rustPlatform.buildRustPackage {
+              inherit name;
+              src = ./.;
+              cargoBuildFlags = "--bin ${name}";
+              cargoLock.lockFile = ./Cargo.lock;
             }
-            // acc
-          ) { } targets;
+          );
         in
         packages
         // rec {
