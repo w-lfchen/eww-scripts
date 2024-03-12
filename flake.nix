@@ -1,13 +1,15 @@
 {
   description = "Some eww scripts";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-  outputs = { self, nixpkgs }:
+  outputs =
+    { self, nixpkgs }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           rustfmt
@@ -22,28 +24,31 @@
           export RUSTC_WRAPPER=sccache
         '';
       };
-      packages.${system} = let
-        targets = [
-          "eww-launch"
-          "hyprland-current-window-title"
-          "hyprland-workspaces"
-        ];
-        packages = builtins.foldl' (acc: t:
-          {
-            ${t} = pkgs.rustPlatform.buildRustPackage {
-              name = t;
+      packages.${system} =
+        let
+          targets = [
+            "eww-launch"
+            "hyprland-current-window-title"
+            "hyprland-workspaces"
+          ];
+          packages = nixpkgs.lib.genAttrs targets (
+            name:
+            pkgs.rustPlatform.buildRustPackage {
+              inherit name;
               src = ./.;
-              cargoBuildFlags = "--bin ${t}";
+              cargoBuildFlags = "--bin ${name}";
               cargoLock.lockFile = ./Cargo.lock;
-            };
-          } // acc) { } targets;
-      in packages // rec {
-        all = pkgs.symlinkJoin {
-          name = "eww-scripts";
-          paths = builtins.attrValues packages;
+            }
+          );
+        in
+        packages
+        // rec {
+          all = pkgs.symlinkJoin {
+            name = "eww-scripts";
+            paths = builtins.attrValues packages;
+          };
+          default = all;
         };
-        default = all;
-      };
-      formatter.${system} = pkgs.nixfmt;
+      formatter.${system} = pkgs.nixfmt-rfc-style;
     };
 }
