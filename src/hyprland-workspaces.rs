@@ -1,39 +1,29 @@
 use hyprland::data::{Monitor, Monitors, Workspace, Workspaces};
-use hyprland::event_listener::EventListenerMutable as EventListener;
+use hyprland::event_listener::EventListener;
 use hyprland::shared::{HyprData, HyprDataActive};
 use hyprland::Result;
-use std::{env, process};
+use std::env;
 
 fn main() -> Result<()> {
-    let args: Vec<_> = env::args().collect();
+    let args: Vec<String> = env::args().skip(1).collect();
     match args.len() {
-        1 => listen_single(),
-        2 => {
-            if let Some(mon_id) = parse_monitor(&args[1]) {
-                listen_mon(mon_id)
-            } else {
-                println!("Wrong usage: Unable to find monitor \"{}\"", args[1]);
-                process::exit(1)
-            }
-        }
-        _ => {
-            println!(
-                "Wrong usage: Expected 0 or 1 arguments, got: {}",
-                args.len() - 1 // subtract 1 due to path
-            );
-            process::exit(1)
-        }
+        0 => listen_single(),
+        1 => listen_mon(parse_monitor(&args[0])?),
+        _ => panic!(
+            "Wrong usage: Expected 0 or 1 arguments, got: {}",
+            args.len()
+        ),
     }
 }
 
 fn listen_single() -> Result<()> {
     print_data_single();
     let mut listener = EventListener::new();
-    listener.add_workspace_change_handler(|_, _| print_data_single());
-    listener.add_workspace_added_handler(|_, _| print_data_single());
-    listener.add_workspace_destroy_handler(|_, _| print_data_single());
-    listener.add_workspace_moved_handler(|_, _| print_data_single());
-    listener.add_active_monitor_change_handler(|_, _| print_data_single());
+    listener.add_active_monitor_change_handler(|_| print_data_single());
+    listener.add_workspace_added_handler(|_| print_data_single());
+    listener.add_workspace_change_handler(|_| print_data_single());
+    listener.add_workspace_destroy_handler(|_| print_data_single());
+    listener.add_workspace_moved_handler(|_| print_data_single());
     listener.start_listener()
 }
 
@@ -48,7 +38,7 @@ fn print_data_single() {
     let mut string: String = "[".to_string();
     for str in workspaces.iter().map(|ws| {
         format!(
-            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}},",
+            r#"{{"id":{},"name":"{}","class":"ws-button ws{}","active":{}}},"#,
             ws.id,
             ws.name,
             ws.id,
@@ -61,21 +51,21 @@ fn print_data_single() {
     println!("{string}]");
 }
 
-fn parse_monitor(input: &str) -> Option<i128> {
-    Monitors::get()
-        .expect("Unable to access monitors!")
+fn parse_monitor(input: &str) -> Result<i128> {
+    Monitors::get()?
         .find(|monitor| monitor.name == input)
         .map(|monitor| monitor.id)
+        .ok_or_else(|| panic!("Wrong usage: Unable to find monitor \"{input}\""))
 }
 
 fn listen_mon(id: i128) -> Result<()> {
     print_mon_data(id);
     let mut listener = EventListener::new();
-    listener.add_workspace_change_handler(move |_, _| print_mon_data(id));
-    listener.add_workspace_added_handler(move |_, _| print_mon_data(id));
-    listener.add_workspace_destroy_handler(move |_, _| print_mon_data(id));
-    listener.add_workspace_moved_handler(move |_, _| print_mon_data(id));
-    listener.add_active_monitor_change_handler(move |_, _| print_mon_data(id));
+    listener.add_active_monitor_change_handler(move |_| print_mon_data(id));
+    listener.add_workspace_added_handler(move |_| print_mon_data(id));
+    listener.add_workspace_change_handler(move |_| print_mon_data(id));
+    listener.add_workspace_destroy_handler(move |_| print_mon_data(id));
+    listener.add_workspace_moved_handler(move |_| print_mon_data(id));
     listener.start_listener()
 }
 
@@ -104,7 +94,7 @@ fn print_mon_data(id: i128) {
     );
     for str in workspaces.iter().map(|ws| {
         format!(
-            "{{\"id\":{},\"name\":\"{}\",\"class\":\"ws-button ws{}\",\"active\":{}}},",
+            r#"{{"id":{},"name":"{}","class":"ws-button ws{}","active":{}}},"#,
             ws.id,
             ws.name,
             ws.id,
