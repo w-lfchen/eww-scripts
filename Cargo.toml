@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-hyprland = { version = "0.3.13", features = ["silent"] }
+# once this is no longer in alpha, a different version should be specified
+hyprland = { version = "=0.4.0-alpha.2", features = ["silent"] }
 
 [[bin]]
 name = "eww-launch"

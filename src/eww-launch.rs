@@ -37,6 +37,7 @@ fn spawn_two_bars(left_pos: i32, right_pos: i32) -> Result<()> {
     // every other solution looks even more ugly to me
     let mut check_vec = Vec::with_capacity(2);
     Monitors::get()?
+        .into_iter()
         .map(|monitor| (monitor.id, monitor.x))
         .for_each(|(id, x_pos)| {
             check_vec.push(id);
