@@ -24,31 +24,15 @@
           export RUSTC_WRAPPER=sccache
         '';
       };
-      packages.${system} =
-        let
-          targets = [
-            "eww-launch"
-            "hyprland-current-window-title"
-            "hyprland-workspaces"
-          ];
-          packages = nixpkgs.lib.genAttrs targets (
-            name:
-            pkgs.rustPlatform.buildRustPackage {
-              inherit name;
-              src = ./.;
-              cargoBuildFlags = "--bin ${name}";
-              cargoLock.lockFile = ./Cargo.lock;
-            }
-          );
-        in
-        packages
-        // rec {
-          all = pkgs.symlinkJoin {
-            name = "eww-scripts";
-            paths = builtins.attrValues packages;
-          };
-          default = all;
+      packages.${system} = {
+        eww-helper = pkgs.rustPlatform.buildRustPackage {
+          pname = "eww-helper";
+          version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
+          src = ./.;
+          cargoLock.lockFile = ./Cargo.lock;
         };
+        default = self.packages.${system}.eww-helper;
+      };
       formatter.${system} = pkgs.nixfmt-rfc-style;
     };
 }

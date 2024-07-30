@@ -1,20 +1,13 @@
 [package]
-name = "eww-scripts-flake"
+name = "eww-helper"
 version = "0.1.0"
 edition = "2021"
+description = """\
+    A helper binary to use in conjunction with eww.\n\
+    Currently, only Hyprland is supported because this project was made for my use case.\
+    """
 
 [dependencies]
+clap = { version = "4.5.11", features = ["cargo", "derive"] }
 # once this is no longer in alpha, a different version should be specified
 hyprland = { version = "=0.4.0-alpha.2", features = ["silent"] }
-
-[[bin]]
-name = "eww-launch"
-path = "src/eww-launch.rs"
-
-[[bin]]
-name = "hyprland-current-window-title"
-path = "src/hyprland-current-window-title.rs"
-
-[[bin]]
-name = "hyprland-workspaces"
-path = "src/hyprland-workspaces.rs"
