@@ -1,4 +1,9 @@
+use core::panic;
+
 use clap::{Parser, Subcommand};
+use eww_launch::{spawn_one_bar, spawn_two_bars};
+use hyprland::Result;
+use hyprland_window_title::listem_window_title;
 
 mod eww_launch;
 mod hyprland_window_title;
@@ -29,14 +34,17 @@ enum Commands {
     },
 }
 
-fn main() {
+fn main() -> Result<()> {
     match Cli::parse().command {
-        Commands::LaunchEww { positions: None } => todo!(),
+        Commands::LaunchEww { positions: None } => spawn_one_bar(),
         Commands::LaunchEww {
             positions: Some(positions),
-        } => todo!(),
+        } => match *positions.as_slice() {
+            [left, right] => spawn_two_bars(left, right),
+            _ => panic!("invalid argument format"),
+        },
 
-        Commands::WindowTitle => todo!(),
+        Commands::WindowTitle => listem_window_title(),
 
         Commands::Workspaces { monitor: None } => todo!(),
         Commands::Workspaces {

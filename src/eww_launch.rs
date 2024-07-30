@@ -17,7 +17,7 @@ fn main() -> Result<()> {
     }
 }
 
-fn spawn_one_bar() -> Result<()> {
+pub(super) fn spawn_one_bar() -> Result<()> {
     if !Command::new("eww")
         .args(["open", "--toggle", "bar"])
         .spawn()?
@@ -29,7 +29,7 @@ fn spawn_one_bar() -> Result<()> {
     Ok(())
 }
 
-fn spawn_two_bars(left_pos: i32, right_pos: i32) -> Result<()> {
+pub(super) fn spawn_two_bars(left_pos: i32, right_pos: i32) -> Result<()> {
     let mut map = HashMap::with_capacity(2);
     // this vector is needed because for some reason hyprland and eww sometimes disagree about which monitor is the one with id 1 and which one has id 0
     // this is annoying and I hope it gets fixed, for example by eww using what hyprland condsiders the name attribute instead of the model

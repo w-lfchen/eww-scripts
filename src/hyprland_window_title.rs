@@ -3,7 +3,7 @@ use hyprland::event_listener::EventListener;
 use hyprland::shared::HyprDataActive;
 use hyprland::Result;
 
-fn main() -> Result<()> {
+pub(super) fn listem_window_title() -> Result<()> {
     print_window_title();
     let mut listener = EventListener::new();
     listener.add_active_monitor_change_handler(|_| print_window_title());
