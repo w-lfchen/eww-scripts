@@ -39,16 +39,12 @@ fn print_data_single() {
     println!("{string}]");
 }
 
-fn parse_monitor(input: &str) -> Result<i128> {
-    Monitors::get()?
+pub(super) fn listen_mon(input: &str) -> Result<()> {
+    let id = Monitors::get()?
         .into_iter()
         .find(|monitor| monitor.name == input)
         .map(|monitor| monitor.id)
-        .ok_or_else(|| panic!("Wrong usage: Unable to find monitor \"{input}\""))
-}
-
-pub(super) fn listen_mon(input: &str) -> Result<()> {
-    let id = parse_monitor(input)?;
+        .expect("Wrong usage: Unable to find monitor \"{input}\"");
     print_mon_data(id);
     let mut listener = EventListener::new();
     listener.add_active_monitor_change_handler(move |_| print_mon_data(id));
