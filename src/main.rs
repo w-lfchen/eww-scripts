@@ -3,20 +3,21 @@ use core::panic;
 use clap::{Parser, Subcommand};
 use eww_launch::{spawn_one_bar, spawn_two_bars};
 use hyprland::Result;
-use hyprland_window_title::listem_window_title;
+use hyprland_window_title::listen_window_title;
+use hyprland_workspaces::{listen_mon, listen_single_mon};
 
 mod eww_launch;
 mod hyprland_window_title;
 mod hyprland_workspaces;
 
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 struct Cli {
     #[clap(subcommand)]
     command: Commands,
 }
 
-#[derive(Subcommand, Debug)]
+#[derive(Subcommand)]
 enum Commands {
     /// Launch eww bar(s)
     LaunchEww {
@@ -44,11 +45,11 @@ fn main() -> Result<()> {
             _ => panic!("invalid argument format"),
         },
 
-        Commands::WindowTitle => listem_window_title(),
+        Commands::WindowTitle => listen_window_title(),
 
-        Commands::Workspaces { monitor: None } => todo!(),
+        Commands::Workspaces { monitor: None } => listen_single_mon(),
         Commands::Workspaces {
             monitor: Some(monitor),
-        } => todo!(),
+        } => listen_mon(&monitor),
     }
 }

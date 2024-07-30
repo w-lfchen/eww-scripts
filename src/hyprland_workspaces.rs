@@ -2,21 +2,8 @@ use hyprland::data::{Monitor, Monitors, Workspace, Workspaces};
 use hyprland::event_listener::EventListener;
 use hyprland::shared::{HyprData, HyprDataActive};
 use hyprland::Result;
-use std::env;
 
-fn main() -> Result<()> {
-    let args: Vec<String> = env::args().skip(1).collect();
-    match args.len() {
-        0 => listen_single(),
-        1 => listen_mon(parse_monitor(&args[0])?),
-        _ => panic!(
-            "Wrong usage: Expected 0 or 1 arguments, got: {}",
-            args.len()
-        ),
-    }
-}
-
-fn listen_single() -> Result<()> {
+pub(super) fn listen_single_mon() -> Result<()> {
     print_data_single();
     let mut listener = EventListener::new();
     listener.add_active_monitor_change_handler(|_| print_data_single());
@@ -60,7 +47,8 @@ fn parse_monitor(input: &str) -> Result<i128> {
         .ok_or_else(|| panic!("Wrong usage: Unable to find monitor \"{input}\""))
 }
 
-fn listen_mon(id: i128) -> Result<()> {
+pub(super) fn listen_mon(input: &str) -> Result<()> {
+    let id = parse_monitor(input)?;
     print_mon_data(id);
     let mut listener = EventListener::new();
     listener.add_active_monitor_change_handler(move |_| print_mon_data(id));

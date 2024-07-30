@@ -1,22 +1,6 @@
 use hyprland::{data::Monitors, shared::HyprData, Result};
 use std::{collections::HashMap, process::Command};
 
-fn main() -> Result<()> {
-    let args: Vec<i32> = std::env::args()
-        .skip(1)
-        .enumerate()
-        .map(|(i, n)| {
-            n.parse()
-                .unwrap_or_else(|_| panic!("Invalid argument format at position {i}!"))
-        })
-        .collect();
-    match args.as_slice() {
-        [] | [1] => spawn_one_bar(),
-        [2, left_pos, right_pos] => spawn_two_bars(*left_pos, *right_pos),
-        _ => panic!("Invalid argument format!"),
-    }
-}
-
 pub(super) fn spawn_one_bar() -> Result<()> {
     if !Command::new("eww")
         .args(["open", "--toggle", "bar"])
