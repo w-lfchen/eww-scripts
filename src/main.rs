@@ -1,5 +1,9 @@
 use clap::{Parser, Subcommand};
 
+mod eww_launch;
+mod hyprland_window_title;
+mod hyprland_workspaces;
+
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Cli {
@@ -26,16 +30,17 @@ enum Commands {
 }
 
 fn main() {
-    let cli = Cli::parse();
-    match cli.command {
-        Commands::LaunchEww { positions: _ } => {
-            todo!()
-        }
-        Commands::WindowTitle => {
-            todo!()
-        }
-        Commands::Workspaces { monitor: _ } => {
-            todo!()
-        }
+    match Cli::parse().command {
+        Commands::LaunchEww { positions: None } => todo!(),
+        Commands::LaunchEww {
+            positions: Some(positions),
+        } => todo!(),
+
+        Commands::WindowTitle => todo!(),
+
+        Commands::Workspaces { monitor: None } => todo!(),
+        Commands::Workspaces {
+            monitor: Some(monitor),
+        } => todo!(),
     }
 }
