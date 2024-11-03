@@ -9,5 +9,31 @@ Currently only supports Hyprland, see the respective help pages (`-h` flag) for 
 Available subcommands:
 - `window-title`: Prints the current window title if it changes. <br>
   Intended for [listening variables](https://elkowar.github.io/eww/configuration.html#adding-dynamic-content).
-- `workspaces`: Prints a JSON object with the current workspace information if it changes. <br>
+- `workspaces`: Prints a JSON object with workspace information if there are state changes. <br>
   Intended for [listening variables](https://elkowar.github.io/eww/configuration.html#adding-dynamic-content).
+
+
+### `workspaces` object structure
+A workspace object has the following structure:
+```json
+{
+  "id":<int: workspace id>,
+  "name":<string: workspace name>,
+  "class":<string: some css classes, see below>,
+  "active":<bool: whether the workspace is active>
+}
+```
+The classes are `ws-button ws<id>`, where `<id>` is the workspace ID.
+
+A monitor object has the following structure:
+```json
+{
+  "active":<bool: whether the monitor is active>,
+  "workspaces":<list of workspace objects: the workspaces on the given monitor>
+}
+```
+If the monitor is not specified, a list of all workspaces on all monitors will be printed. This is intended for single monitor setups.
+
+If a monitor is specified through `-m`, the corresponding monitor object will be printed. This can be used for setups with an arbitrary amount of monitors.
+
+Note that the JSON object is stripped of all whitespace where possible.
