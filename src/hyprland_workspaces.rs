@@ -6,10 +6,10 @@ use hyprland::Result;
 pub(super) fn listen_single_mon() -> Result<()> {
     print_data_single();
     let mut listener = EventListener::new();
-    listener.add_active_monitor_change_handler(|_| print_data_single());
+    listener.add_active_monitor_changed_handler(|_| print_data_single());
     listener.add_workspace_added_handler(|_| print_data_single());
-    listener.add_workspace_change_handler(|_| print_data_single());
-    listener.add_workspace_destroy_handler(|_| print_data_single());
+    listener.add_workspace_changed_handler(|_| print_data_single());
+    listener.add_workspace_deleted_handler(|_| print_data_single());
     listener.add_workspace_moved_handler(|_| print_data_single());
     listener.start_listener()
 }
@@ -47,10 +47,10 @@ pub(super) fn listen_mon(input: &str) -> Result<()> {
         .expect("Wrong usage: Unable to find monitor \"{input}\"");
     print_mon_data(id);
     let mut listener = EventListener::new();
-    listener.add_active_monitor_change_handler(move |_| print_mon_data(id));
+    listener.add_active_monitor_changed_handler(move |_| print_mon_data(id));
     listener.add_workspace_added_handler(move |_| print_mon_data(id));
-    listener.add_workspace_change_handler(move |_| print_mon_data(id));
-    listener.add_workspace_destroy_handler(move |_| print_mon_data(id));
+    listener.add_workspace_changed_handler(move |_| print_mon_data(id));
+    listener.add_workspace_deleted_handler(move |_| print_mon_data(id));
     listener.add_workspace_moved_handler(move |_| print_mon_data(id));
     listener.start_listener()
 }
