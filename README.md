@@ -17,10 +17,10 @@ Available subcommands:
 A workspace object has the following structure:
 ```json
 {
-  "id":<int: workspace id>,
-  "name":<string: workspace name>,
-  "class":<string: some css classes, see below>,
-  "active":<bool: whether the workspace is active>
+  "id": "<int: workspace id>",
+  "name": "<string: workspace name>",
+  "class": "<string: some css classes, see below>",
+  "active": "<bool: whether the workspace is active>"
 }
 ```
 The classes are `ws-button ws<id>`, where `<id>` is the workspace ID.
@@ -28,8 +28,8 @@ The classes are `ws-button ws<id>`, where `<id>` is the workspace ID.
 A monitor object has the following structure:
 ```json
 {
-  "active":<bool: whether the monitor is active>,
-  "workspaces":<list of workspace objects: the workspaces on the given monitor>
+  "active": "<bool: whether the monitor is active>",
+  "workspaces": "<list of workspace objects: the workspaces on the given monitor>"
 }
 ```
 If the monitor is not specified, a list of all workspaces on all monitors will be printed. This is intended for single monitor setups.
