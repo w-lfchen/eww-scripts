@@ -7,7 +7,6 @@ I might add more scripts if I write scripts that are complex enough to deserve a
 Currently only supports Hyprland, see the respective help pages (`-h` flag) for usage.
 
 Available subcommands:
-- `launch-eww`: Launches eww
 - `window-title`: Prints the current window title if it changes. <br>
   Intended for [listening variables](https://elkowar.github.io/eww/configuration.html#adding-dynamic-content).
 - `workspaces`: Prints a JSON object with the current workspace information if it changes. <br>
