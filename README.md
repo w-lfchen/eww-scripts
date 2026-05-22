@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repo is archived because I no longer use it.
+
 # Scripts for my [eww](https://github.com/elkowar/eww/) configuration
 The intended way to access these scripts is the [flake](flake.nix). It currently only contains the eww-helper binary, a small program with a few subcommands for use in scripts.
 
